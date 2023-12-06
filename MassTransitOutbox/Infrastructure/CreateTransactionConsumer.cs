@@ -36,7 +36,7 @@ namespace MassTransitOutbox.Infrastructure
             Transaction transaction = new Transaction()
             {
                 Amount = context.Message.Amount,
-                Description = context.Message.Description,
+                Description = "description",
                 Account = account
             };
 
