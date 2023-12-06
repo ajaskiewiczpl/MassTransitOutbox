@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+
+  masstransitoutbox:
+    image: ${DOCKER_REGISTRY-}masstransitoutbox
+    build:
+      context: .
+      dockerfile: MassTransitOutbox/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Sql: Server=sqldata;Port=5432;Database=MassTransitOutbox;User Id=admin;Password=123;
+      MessageBroker__Host: amqp://rabbitmq:5672
+      MessageBroker__Username: admin
+      MessageBroker__Password: 123
+
+  sqldata:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./appdata/sql/data:/var/lib/postgresql/data/pgdata
+
+  rabbitmq:
+    image: rabbitmq:management
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: 123
+    ports:
+      - 8089:15672
+    volumes:
+      - ./appdata/rabbitmq/data/:/var/lib/rabbitmq
+      - ./appdata/rabbitmq/log/:/var/log/rabbitmq
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@test.com
+      PGADMIN_DEFAULT_PASSWORD: 123
