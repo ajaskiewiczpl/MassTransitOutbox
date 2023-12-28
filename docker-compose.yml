@@ -3,6 +3,7 @@ version: '3.4'
 services:
 
   masstransitoutbox:
+    container_name: MassTransitOutbox.API
     image: ${DOCKER_REGISTRY-}masstransitoutbox
     build:
       context: .
@@ -15,6 +16,7 @@ services:
       MessageBroker__Password: 123
 
   sqldata:
+    container_name: MassTransitOutbox.SQL
     image: postgres
     environment:
       POSTGRES_USER: admin
@@ -24,6 +26,7 @@ services:
       - ./appdata/sql/data:/var/lib/postgresql/data/pgdata
 
   rabbitmq:
+    container_name: MassTransitOutbox.RabbitMq
     image: rabbitmq:management
     environment:
       RABBITMQ_DEFAULT_USER: admin
@@ -35,8 +38,8 @@ services:
       - ./appdata/rabbitmq/log/:/var/log/rabbitmq
 
   pgadmin:
+    container_name: MassTransitOutbox.PGAdmin
     image: dpage/pgadmin4
-    container_name: pgadmin
     restart: always
     ports:
       - "8888:80"

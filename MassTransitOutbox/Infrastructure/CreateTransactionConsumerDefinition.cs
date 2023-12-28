@@ -4,9 +4,13 @@ namespace MassTransitOutbox.Infrastructure
 {
     public class CreateTransactionConsumerDefinition : ConsumerDefinition<CreateTransactionConsumer>
     {
+        public CreateTransactionConsumerDefinition()
+        {
+            ConcurrentMessageLimit = 1;
+        }
+
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<CreateTransactionConsumer> consumerConfigurator, IRegistrationContext context)
         {
-            consumerConfigurator.ConcurrentMessageLimit = 1;
             endpointConfigurator.UseEntityFrameworkOutbox<AppDbContext>(context);
         }
     }
